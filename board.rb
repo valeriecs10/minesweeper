@@ -25,6 +25,21 @@ class Board
         Array.new(size) { Array.new(size) { Tile.new(self) } }
     end
 
+    def render_header
+        print "  "
+        (0...board_size).each { |n| print "#{n} " }
+        puts
+    end
+
+    def render
+        render_header
+        @grid.each_with_index do |row, i|
+            print "#{i} "
+            row.each { |tile| print "#{tile} " }
+            puts
+        end
+    end
+
     def won?
         @grid.all? do |row| 
             row.all? { |tile| tile.hidden == false || tile.bomb == true }
