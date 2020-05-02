@@ -24,6 +24,10 @@ class Tile
         end
     end
 
+    def is_bomb?
+        @bomb
+    end
+
     def reveal
         @hidden = false
     end
@@ -33,7 +37,7 @@ class Tile
     end
 
     def neighbor_bomb_count
-        neighbors.count { |neighbor| @board[*neighbor].bomb == true }
+        neighbors.count { |neighbor| @board[neighbor].bomb == true }
     end
 
     def neighbors

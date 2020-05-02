@@ -7,13 +7,14 @@ class Board
         @grid = empty_grid(size)
     end
     
-    def [](*pos)
+    def [](pos)
         x, y = pos
         @grid[x][y]
     end
 
     def valid_pos?(pos)
-        pos.all? { |coord| coord.between?(0, board_size) }
+        pos.length == 2 &&
+            pos.all? { |coord| coord.between?(0, board_size) }
     end
 
     def board_size
