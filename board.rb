@@ -1,15 +1,32 @@
 require_relative 'tile.rb'
+require 'byebug'
 
 class Board
     attr_reader :grid
 
     def initialize(size = 9)
         @grid = empty_grid(size)
+        # seed_board(size)
     end
     
     def [](pos)
         x, y = pos
         @grid[x][y]
+    end
+    
+    def seed_board(percent = 25)
+        num_bombs = (board_size ** 2 * (percent / 100.0)).round
+        all_positions = []
+        
+        @grid.each_with_index do |row, x|
+            row.each_with_index do |tile, y|
+                all_positions << [x, y]
+            end
+        end
+        
+        all_positions.sample(num_bombs).each do |pos|
+            self[pos].bomb = true # MAKE SURE ONLY THIS CLASS CAN ACCESS BOMB ATTR
+        end
     end
 
     def valid_pos?(pos)

@@ -3,7 +3,7 @@ require 'byebug'
 
 class Tile
     attr_reader :bomb
-    attr_accessor :hidden, :flagged, :bomb, :board # DELETE AFTER TESTING
+    attr_accessor :hidden, :flagged, :bomb, :board # DELETE AFTER TESTING, FIND WAY TO GIVE BOARD CLASS ACCESS TO BOMB ATTR
 
     def initialize(board)
         @hidden = true
@@ -17,10 +17,12 @@ class Tile
             "F"
         elsif @hidden == true
             "*"
+        elsif @hidden == false && @bomb == true
+            "O"
         elsif @hidden == false && neighbor_bomb_count == 0
             "_"
         else
-            neighbor_bomb_count
+            neighbor_bomb_count.to_s
         end
     end
 
@@ -42,7 +44,8 @@ class Tile
 
     def neighbors
         x, y = self_pos
-        neighbors = [[x + 1, y], [x - 1, y], [x, y + 1], [x, y - 1]]
+        neighbors = [[x - 1, y - 1], [x - 1, y], [x - 1, y + 1], [x, y - 1],
+                     [x, y + 1], [x + 1, y - 1], [x + 1, y], [x + 1, y - 1]]
         neighbors.select { |neighbor| @board.valid_pos?(neighbor) }
     end
 
