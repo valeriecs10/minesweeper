@@ -12,6 +12,14 @@ class Board
         @grid[x][y]
     end
 
+    def valid_pos?(pos)
+        pos.all? { |coord| coord.between?(0, board_size) }
+    end
+
+    def board_size
+        @grid.length
+    end
+
     def empty_grid(size)
         Array.new(size) { Array.new(size) { Tile.new(self) } }
     end

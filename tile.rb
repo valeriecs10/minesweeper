@@ -39,15 +39,7 @@ class Tile
     def neighbors
         x, y = self_pos
         neighbors = [[x + 1, y], [x - 1, y], [x, y + 1], [x, y - 1]]
-        neighbors.select { |neighbor| valid_pos?(neighbor) }
-    end
-
-    def board_size
-        @board.grid.length
-    end
-
-    def valid_pos?(pos)
-        pos.all? { |coord| coord.between?(0, board_size) }
+        neighbors.select { |neighbor| @board.valid_pos?(neighbor) }
     end
 
     def self_pos
