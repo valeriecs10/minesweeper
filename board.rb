@@ -14,7 +14,7 @@ class Board
 
     def valid_pos?(pos)
         pos.length == 2 &&
-            pos.all? { |coord| coord.between?(0, board_size) }
+            pos.all? { |coord| coord.between?(0, board_size - 1) }
     end
 
     def board_size

@@ -6,11 +6,12 @@ class Minesweeper
         @bombed = false
     end
 
-     def run
-        while !@bombed
-            play_turn until @board.won?
-            puts "Congratulations! You cleared the board!"
+    def run
+        until @board.won? || @bombed == true
+            refresh_board
+            play_turn
         end
+        puts "Congratulations! You cleared the board!" if @board.won?
     end
 
     def get_pos
@@ -23,23 +24,47 @@ class Minesweeper
                 pos = parse_pos(gets.chomp)
             rescue => error
                 puts error
-                puts "You can only reveal a valid, hidden tile. Try again."
+                puts "Position must be 2 numbers separated by a comma. Try again."
                 puts
-
+                
                 pos = nil
             end
-            puts "Position must be 2 numbers separated by a comma. Try again."
+
+            if !@board.valid_pos?(pos) 
+                puts "You can only reveal a hidden tile on the board. Try again."
+                pos = nil
+            end
         end
         pos
     end
 
+    def refresh_board
+        system("clear")
+        @board.render
+    end
+
+    def reveal_neighbors(pos)
+        @board[pos].neighbors.each do |neighbor| 
+            if @board[neighbor].hidden
+                @board[neighbor].reveal
+                reveal_neighbors(neighbor)
+            end
+        end
+    end
+
     def play_turn
         guess_pos = get_pos
+
         if @board[guess_pos].is_bomb?
             @bombed = true
         else
-            # FINISH TURN
+            @board[guess_pos].reveal
+
+            if @board[guess_pos].neighbor_bomb_count == 0
+                reveal_neighbors(guess_pos) 
+            end
         end
+
     end
 
     def prompt
