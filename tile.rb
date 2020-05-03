@@ -45,7 +45,7 @@ class Tile
     def neighbors
         x, y = self_pos
         neighbors = [[x - 1, y - 1], [x - 1, y], [x - 1, y + 1], [x, y - 1],
-                     [x, y + 1], [x + 1, y - 1], [x + 1, y], [x + 1, y - 1]]
+                     [x, y + 1], [x + 1, y - 1], [x + 1, y], [x + 1, y + 1]]
         neighbors.select { |neighbor| @board.valid_pos?(neighbor) }
     end
 

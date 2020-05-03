@@ -6,7 +6,7 @@ class Board
 
     def initialize(size = 9)
         @grid = empty_grid(size)
-        # seed_board(size)
+        seed_board(size)
     end
     
     def [](pos)

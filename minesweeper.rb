@@ -1,6 +1,9 @@
 require_relative 'board.rb'
+require 'byebug'
 
 class Minesweeper
+
+    attr_reader :board # DELETE AFTER TESTING
     def initialize(size = 9)
         @board = Board.new(size)
         @bombed = false
@@ -43,26 +46,25 @@ class Minesweeper
         @board.render
     end
 
-    def reveal_neighbors(pos)
-        @board[pos].neighbors.each do |neighbor| 
-            if @board[neighbor].hidden
-                @board[neighbor].reveal
-                reveal_neighbors(neighbor)
+    def reveal_tiles(pos)
+        if @board[pos].neighbor_bomb_count == 0
+            @board[pos].neighbors.each do |n|
+                if @board[n].hidden == true
+                    @board[n].reveal
+                    reveal_tiles(n)
+                end
             end
         end
     end
 
     def play_turn
         guess_pos = get_pos
+        @board[guess_pos].reveal
 
         if @board[guess_pos].is_bomb?
             @bombed = true
         else
-            @board[guess_pos].reveal
-
-            if @board[guess_pos].neighbor_bomb_count == 0
-                reveal_neighbors(guess_pos) 
-            end
+            reveal_tiles(guess_pos) 
         end
 
     end
