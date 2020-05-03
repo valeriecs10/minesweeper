@@ -11,6 +11,7 @@ class Board
     
     def [](pos)
         x, y = pos
+        # debugger if x == nil || y == nil # REMOVE AFTER TESTING
         @grid[x][y]
     end
     
@@ -30,7 +31,7 @@ class Board
     end
 
     def valid_pos?(pos)
-        pos.length == 2 &&
+        pos.is_a?(Array) && pos.length == 2 &&
             pos.all? { |coord| coord.between?(0, board_size - 1) }
     end
 

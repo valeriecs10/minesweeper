@@ -30,6 +30,10 @@ class Tile
         @bomb
     end
 
+    def is_flagged?
+        @flagged
+    end
+
     def reveal
         @hidden = false
     end
