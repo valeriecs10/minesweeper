@@ -14,6 +14,7 @@ class Minesweeper
             refresh_board
             play_turn
             if @bombed == true
+                refresh_board
                 puts
                 puts "You hit a bomb! You lose!!"
             end
@@ -30,16 +31,19 @@ class Minesweeper
         while @flag_mode == true
             refresh_board
             flag_prompt
-            
             input = gets.chomp
-            if input.downcase == 'f'
-                @flag_mode = false
-                next
-            else
-                flag_pos = parse_pos(input)
-            end
-            
+            next if exit_flag_mode?(input)
+            flag_pos = parse_pos(input)
             toggle_flag_if_valid(flag_pos)
+        end
+    end
+    
+    def exit_flag_mode?(input)
+        if input.downcase == 'f'
+            @flag_mode = false
+            true
+        else
+            false
         end
     end
     
@@ -58,28 +62,23 @@ class Minesweeper
             prompt
             input = gets.chomp
             
-            if input.downcase == 'f'
+            if enter_flag_mode?(input)
                 flag_mode
                 refresh_board
                 next
             end
             
-            begin
-                pos = parse_pos(input)
-            rescue => error
-                puts error
-                puts "Position must be 2 numbers separated by a comma. Try again."
-                puts
-                
-                pos = nil
-            end
-            
-            if !@board.valid_pos?(pos) || @board[pos].is_flagged?
-                puts "You can only reveal a hidden, unflagged tile on the board. Try again."
-                pos = nil
-            end
+            pos = check_pos(input)
         end
         pos
+    end
+    
+    def enter_flag_mode?(input)
+        if input.downcase == 'f'
+            true
+        else
+            false
+        end
     end
     
     def refresh_board
@@ -96,6 +95,16 @@ class Minesweeper
                 end
             end
         end
+    end
+    
+    def check_pos(input)
+        pos = parse_pos(input)
+        
+        if !@board.valid_pos?(pos) || @board[pos].is_flagged?
+            puts "You can only reveal a hidden, unflagged tile on the board. Try again."
+            return nil
+        end  
+        pos
     end
     
     def play_turn
@@ -124,7 +133,13 @@ class Minesweeper
     end
 
     def parse_pos(pos)
-        pos.split(",").map { |n| Integer(n) }
+        begin
+            pos.split(",").map { |n| Integer(n) }
+        rescue => error
+            puts error
+            puts "Position must be 2 numbers separated by a comma."
+            return nil
+        end
     end
 end
 
