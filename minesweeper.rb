@@ -1,4 +1,5 @@
 require_relative 'board.rb'
+require 'yaml'
 require 'byebug'
 
 class Minesweeper
@@ -29,12 +30,12 @@ class Minesweeper
     def flag_mode
         @flag_mode = true
         while @flag_mode == true
-            refresh_board
             flag_prompt
             input = gets.chomp
             next if exit_flag_mode?(input)
             flag_pos = parse_pos(input)
             toggle_flag_if_valid(flag_pos)
+            refresh_board
         end
     end
     
@@ -54,6 +55,14 @@ class Minesweeper
             puts "Must be a valid, hidden tile. Try again."
         end
     end
+
+    def save_game
+        system("clear")
+        puts "What would you like to call your saved game? (No spaces please)"
+        saved_game_name = gets.chomp
+        saved_game = self.to_yaml
+        File.open("saved_games/#{saved_game_name}", "w+") { |f| f.write(saved_game) }
+    end
     
     def get_pos
         pos = nil
@@ -62,23 +71,28 @@ class Minesweeper
             prompt
             input = gets.chomp
             
+
             if enter_flag_mode?(input)
                 flag_mode
-                refresh_board
                 next
+            end
+
+            if save_game?(input)
+                save_game
+                break # NEED TO STOP GAME RUNNING AFTER SAVED
             end
             
             pos = check_pos(input)
         end
         pos
     end
+
+    def save_game?(input)
+        input.downcase == 's' ? true : false
+    end
     
     def enter_flag_mode?(input)
-        if input.downcase == 'f'
-            true
-        else
-            false
-        end
+        input.downcase == 'f' ? true : false
     end
     
     def refresh_board
@@ -120,8 +134,8 @@ class Minesweeper
     
     def prompt
         puts
-        puts "Enter 'f' to switch to flag mode or enter the"
-        puts "position of the tile that you want to reveal: "
+        puts "Enter 'f' to switch to flag mode or 's' to save. Otherwise, "
+        puts "enter the position of the tile that you want to reveal: "
         puts
     end
     
@@ -143,5 +157,5 @@ class Minesweeper
     end
 end
 
-# game = Minesweeper.new
-# game.run
+game = Minesweeper.new
+game.run
