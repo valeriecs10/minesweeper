@@ -4,6 +4,8 @@ require 'byebug'
 
 class Minesweeper
 
+    attr_reader :board # PRIVATE ACCESS FOR LOAD_GAME METHOD?
+
     def initialize(size = 9)
         @board = Board.new(size)
         @bombed = false
@@ -30,13 +32,14 @@ class Minesweeper
     def flag_mode
         @flag_mode = true
         while @flag_mode == true
+            refresh_board
             flag_prompt
             input = gets.chomp
             next if exit_flag_mode?(input)
             flag_pos = parse_pos(input)
             toggle_flag_if_valid(flag_pos)
-            refresh_board
         end
+        refresh_board
     end
     
     def exit_flag_mode?(input)
@@ -62,6 +65,17 @@ class Minesweeper
         saved_game_name = gets.chomp
         saved_game = self.to_yaml
         File.open("saved_games/#{saved_game_name}", "w+") { |f| f.write(saved_game) }
+        refresh_board
+    end
+
+    def load_game
+        system("clear")
+        puts "What is the name of the game you'd like to load?"
+        load_game_name = gets.chomp
+        load_game_yaml = File.read("saved_games/#{load_game_name}")
+        loaded_game = YAML::load(load_game_yaml)
+        @board = loaded_game.board
+        refresh_board
     end
     
     def get_pos
@@ -79,7 +93,12 @@ class Minesweeper
 
             if save_game?(input)
                 save_game
-                break # NEED TO STOP GAME RUNNING AFTER SAVED
+                next
+            end
+
+            if load_game?(input)
+                load_game
+                next
             end
             
             pos = check_pos(input)
@@ -93,6 +112,10 @@ class Minesweeper
     
     def enter_flag_mode?(input)
         input.downcase == 'f' ? true : false
+    end
+
+    def load_game?(input)
+        input.downcase == 'l' ? true : false
     end
     
     def refresh_board
