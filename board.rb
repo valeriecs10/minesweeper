@@ -1,4 +1,5 @@
 require_relative 'tile.rb'
+
 require 'byebug'
 
 class Board
@@ -11,7 +12,6 @@ class Board
     
     def [](pos)
         x, y = pos
-        # debugger if x == nil || y == nil # REMOVE AFTER TESTING
         @grid[x][y]
     end
     

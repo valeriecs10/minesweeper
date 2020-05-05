@@ -1,4 +1,6 @@
 require_relative 'board.rb'
+require 'colorize'
+
 require 'byebug'
 
 class Tile
@@ -14,15 +16,15 @@ class Tile
 
     def to_s
         if @flagged == true && @hidden == true
-            "F"
+            "F".colorize(:red)
         elsif @hidden == true
             "*"
         elsif @hidden == false && @bomb == true
-            "O"
+            "O".colorize(:red)
         elsif @hidden == false && neighbor_bomb_count == 0
-            "_"
+            "_".colorize(:green)
         else
-            neighbor_bomb_count.to_s
+            neighbor_bomb_count.to_s.colorize(:yellow)
         end
     end
 

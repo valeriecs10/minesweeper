@@ -1,5 +1,7 @@
 require_relative 'board.rb'
 require 'yaml'
+require 'colorize'
+
 require 'byebug'
 
 class Minesweeper
@@ -86,21 +88,6 @@ class Minesweeper
             input = gets.chomp
             
             next if letter_commands(input)
-
-            # if enter_flag_mode?(input)
-            #     flag_mode
-            #     next
-            # end
-
-            # if save_game?(input)
-            #     save_game
-            #     next
-            # end
-
-            # if load_game?(input)
-            #     load_game
-            #     next
-            # end
             
             pos = check_pos(input)
         end
@@ -122,18 +109,6 @@ class Minesweeper
             false
         end
     end
-
-    # def save_game?(input)
-    #     input.downcase == 's' ? true : false
-    # end
-    
-    # def enter_flag_mode?(input)
-    #     input.downcase == 'f' ? true : false
-    # end
-
-    # def load_game?(input)
-    #     input.downcase == 'l' ? true : false
-    # end
     
     def refresh_board
         system("clear")
@@ -175,13 +150,14 @@ class Minesweeper
     def prompt
         puts
         puts "Enter the position of the tile you want to reveal: "
-        puts "(or 'f' for flag mode, 's' to save, or 'l' to load)"
+        puts "(or '#{'f'.colorize(:green)}' for flag mode, '#{'s'.colorize(:green)}' to save, or '#{'l'.colorize(:green)}' to load)"
         puts
     end
     
     def flag_prompt
         puts
-        puts "FLAG MODE (enter 'f' again to exit flag mode)"
+        puts "FLAG MODE".colorize(:red)
+        puts "(enter '#{'f'.colorize(:green)}' again to exit flag mode)"
         puts "Which hidden tile would you like to flag or unflag?"
         puts
     end
