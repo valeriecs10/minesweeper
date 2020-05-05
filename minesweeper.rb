@@ -85,38 +85,55 @@ class Minesweeper
             prompt
             input = gets.chomp
             
+            next if letter_commands(input)
 
-            if enter_flag_mode?(input)
-                flag_mode
-                next
-            end
+            # if enter_flag_mode?(input)
+            #     flag_mode
+            #     next
+            # end
 
-            if save_game?(input)
-                save_game
-                next
-            end
+            # if save_game?(input)
+            #     save_game
+            #     next
+            # end
 
-            if load_game?(input)
-                load_game
-                next
-            end
+            # if load_game?(input)
+            #     load_game
+            #     next
+            # end
             
             pos = check_pos(input)
         end
         pos
     end
 
-    def save_game?(input)
-        input.downcase == 's' ? true : false
-    end
-    
-    def enter_flag_mode?(input)
-        input.downcase == 'f' ? true : false
+    def letter_commands(input)
+        case input.downcase
+        when 'f'
+            flag_mode
+            true
+        when 's'
+            save_game
+            true
+        when 'l'
+            load_game
+            true
+        else
+            false
+        end
     end
 
-    def load_game?(input)
-        input.downcase == 'l' ? true : false
-    end
+    # def save_game?(input)
+    #     input.downcase == 's' ? true : false
+    # end
+    
+    # def enter_flag_mode?(input)
+    #     input.downcase == 'f' ? true : false
+    # end
+
+    # def load_game?(input)
+    #     input.downcase == 'l' ? true : false
+    # end
     
     def refresh_board
         system("clear")
@@ -157,8 +174,8 @@ class Minesweeper
     
     def prompt
         puts
-        puts "Enter 'f' to switch to flag mode or 's' to save. Otherwise, "
-        puts "enter the position of the tile that you want to reveal: "
+        puts "Enter the position of the tile you want to reveal: "
+        puts "(or 'f' for flag mode, 's' to save, or 'l' to load)"
         puts
     end
     
